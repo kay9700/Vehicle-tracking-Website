@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>¿Dónde está mi camión?</title>
+        <meta charset="utf-8">
+        <meta name="description" content="Página para encontrar la localización de camiones">
+        <meta name="keywords" content="Tracking, geolocalización, chihuahua">    
+        <link rel="stylesheet" type="text/css" href="estilo_para_proyecto.css">         
+       
+        <style>
+            div#map {
+                width: 80%;
+                height: 500px;
+                border:double;
+                position:center;
+            }
+        </style>
+    </head>
+
+
+    <body>
+       <div id="page" style="width: 980px; text-align: center; margin: auto; border: 2px solid gray;">
+          <div id="header"> 
+              <b class="titulo">  ¿Dónde está mi camión? </b>
+          </div>
+
+          <div id="wrapper">
+    
+          <!-- contenedor -->
+
+          <div id="wrapper">
+            <!-- menu -->
+                <div id="menu">
+
+                    <div class="bread-crumbs">Menú</div>
+                    <hr style="color:red; background-color:red; width:50%;" />
+                    <ul style="text-align: left;">                        
+                        <li><a href="#1">Inicio</a></li>
+                        <li><a href="#2">Servicio de Rastreo</a></li>
+                        <li><a href="#3">Reportar un Problema</a></li>
+                        <li><a href="#2">Sobre Nosotros</a></li>
+                    </ul>
+                    
+                </div>
+                <!-- fin menu -->
+                <!-- cuerpo -->
+                <div class="container">
+                <div id="body">
+                    <p>
+    
+                        Este es un proyecto desarrollado por estudiantes de Ingeniería Físca, con el objetivo de crear un
+                        portal web que te permita rastrear en que lugar se encuentra el camión que estás esperando. Esto con el fin de 
+                        facilitar la toma de desiciones y optimizar el tiempo con el que se cuentas.  
+    
+                    </p>
+
+                </div>
+                </div>
+                <!-- fin cuerpo -->
+
+                <div id="map" style="position: relative; width: 99.9%;"></div>
+
+                <script>
+                    var map, infoWindow;
+      
+                    //función para animar la aparición del marcador
+                    function toggleBounce(){
+                        if(marker.getAnimation() !== null){
+                            marker.setAnimation(null);
+                        }else{
+                            marker.setAnimation(google.maps.Animation.BOUNCE);
+                        }
+                    }
+      
+                    function initMap() {
+                        map = new google.maps.Map(document.getElementById('map'), {
+                        center: {lat: -34.397, lng: 150.644},
+                        zoom: 16,
+                        styles: [
+                            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+                            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+                            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+                            {
+                            featureType: 'administrative.locality',
+                            elementType: 'labels.text.fill',
+                            stylers: [{color: '#d59563'}]
+                            },
+                            {
+                            featureType: 'poi',
+                            elementType: 'labels.text.fill',
+                            stylers: [{color: '#d59563'}]
+                            },
+                            {
+                            featureType: 'poi.park',
+                            elementType: 'geometry',
+                            stylers: [{color: '#263c3f'}]
+                            },
+                            {
+                            featureType: 'poi.park',
+                            elementType: 'labels.text.fill',
+                            stylers: [{color: '#6b9a76'}]
+                            },
+                            {
+                            featureType: 'road',
+                            elementType: 'geometry',
+                            stylers: [{color: '#38414e'}]
+                            },
+                            {
+                            featureType: 'road',
+                            elementType: 'geometry.stroke',
+                            stylers: [{color: '#212a37'}]
+                            },
+                            {
+                            featureType: 'road',
+                            elementType: 'labels.text.fill',
+                            stylers: [{color: '#9ca5b3'}]
+                            },
+                            {
+                            featureType: 'road.highway',
+                            elementType: 'geometry',
+                            stylers: [{color: '#746855'}]
+                            },
+                            {
+                            featureType: 'road.highway',
+                            elementType: 'geometry.stroke',
+                            stylers: [{color: '#1f2835'}]
+                            },
+                            {
+                            featureType: 'road.highway',
+                            elementType: 'labels.text.fill',
+                            stylers: [{color: '#f3d19c'}]
+                            },
+                            {
+                            featureType: 'transit',
+                            elementType: 'geometry',
+                            stylers: [{color: '#2f3948'}]
+                            },
+                            {
+                            featureType: 'transit.station',
+                            elementType: 'labels.text.fill',
+                            stylers: [{color: '#d59563'}]
+                            },
+                            {
+                            featureType: 'water',
+                            elementType: 'geometry',
+                            stylers: [{color: '#17263c'}]
+                            },
+                            {
+                            featureType: 'water',
+                            elementType: 'labels.text.fill',
+                            stylers: [{color: '#515c6d'}]
+                            },
+                            {
+                            featureType: 'water',
+                            elementType: 'labels.text.stroke',
+                            stylers: [{color: '#17263c'}]
+                            }
+                        ]
+                        });
+                        infoWindow = new google.maps.InfoWindow;
+
+                        // Try HTML5 geolocation.
+                        if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(position) {
+                            var pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                            };
+
+                            var marker = new google.maps.Marker({
+                                position: pos,
+                                map: map,
+                                title: 'Holi:3',
+                                animation: google.maps.Animation.DROP
+                            });
+
+                            marker.addListener('click', toggleBounce);
+
+                            //infoWindow.setPosition(pos);
+                            //infoWindow.setContent('Location found.');
+                            infoWindow.open(map);
+                            map.setCenter(pos);
+                        }, function() {
+                            handleLocationError(true, infoWindow, map.getCenter());
+                        });
+                        } else {
+                        // Browser doesn't support Geolocation
+                        handleLocationError(false, infoWindow, map.getCenter());
+                        }
+                    }
+
+                    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+                        infoWindow.setPosition(pos);
+                        infoWindow.setContent(browserHasGeolocation ?
+                                            'Error: The Geolocation service failed.' :
+                                            'Error: Your browser doesn\'t support geolocation.');
+                        infoWindow.open(map);
+                    }
+
+                    
+
+                    </script>
+
+                    <script async defer
+                        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBd8u4bqDX0GzT6WeGA8M0AWd_jTrMqpcY&callback=initMap">
+                    </script>
+                
+                <div>
+
+                    <form method="get" action="accion.html">
+                        
+                        
+                        <input type="submit" value="Calcular tiempo">
+                        El tiempo estimada para que llegue tu camión: <textarea name="mensaje" cols=20 rows=1/></textarea><br/><br/> <br/><br/>                        
+
+                </div>
+
+            </div>
+            <!-- fin contenedor -->
+            <br/><br/><br/>
+
+            <div id="footer">
+                Copyright © 2020
+            </div>
+
+        </div>
+
+    </body>
+
+</html>
